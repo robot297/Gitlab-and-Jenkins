@@ -1,13 +1,23 @@
-version: "3"
+version: "3.7"
+
+networks:
+  frontend:
+    external: false
+    # Use a custom driver
+    # driver: custom-driver-1
+
 services:
   gitlab-ce:
     image: gitlab/gitlab-ce
-    container_name: gitlab-ce
-    hostname: 'localhost'
+    container_name: gitlab
+    hostname: gitlab
+    networks:
+      - frontend
     ports:
       - "80:80"
       - "443:443"
-      - "2222:22"
+      - "22"
+      - "4567:4567"
     volumes:
       - type: bind
         source: ./gitlab-ce/config
@@ -18,13 +28,32 @@ services:
       - type: bind
         source: ./gitlab-ce/data
         target: /var/opt/gitlab
-  gitlab-runners:
-    image: gitlab/gitlab-runner
-    container_name: gitlab-runner
+    # links:
+    #   - gitlab-runners:gitlab-runners
+
+  # gitlab-runners:
+  #   image: gitlab/gitlab-runner
+  #   container_name: gitlab-runner
+  #   networks:
+  #     - frontend
+  #   links:
+  #     - "gitlab-ce:gitlab"
+  #   volumes:
+  #     - type: bind
+  #       source: ./gitlab-runners/config
+  #       target: /etc/gitlab-runner
+  #     - type: bind
+  #       source: /var/run/docker.sock
+  #       target: /var/run/docker.sock
+
+  jenkins:
+    image: jenkins/jenkins
+    container_name: jenkins
+    networks:
+      - frontend
+    ports:
+      - 8080:8080
     volumes:
       - type: bind
-        source: ./gitlab-runners/config
-        target: /etc/gitlab-runner
-      - type: bind
-        source: /var/run/docker.sock
-        target: /var/run/docker.sock
+        source: ./jenkins
+        target: /var/log/jenkins
