@@ -18,4 +18,13 @@ services:
       - type: bind
         source: ./gitlab-ce/data
         target: /var/opt/gitlab
-  
+  gitlab-runners:
+    image: gitlab/gitlab-runner
+    container_name: gitlab-runner
+    volumes:
+      - type: bind
+        source: ./gitlab-runners/config
+        target: /etc/gitlab-runner
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
