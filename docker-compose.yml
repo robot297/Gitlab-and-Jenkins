@@ -1,0 +1,19 @@
+version: "3"
+services:
+  gitlab-ce:
+    image: gitlab/gitlab-ce
+    container_name: gitlab-ce
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - type: bind
+        source: ./gitlab-ce/config
+        target: /etc/gitlab
+      - type: bind
+        source: ./gitlab-ce/logs
+        target: /var/log/gitlab
+      - type: bind
+        source: ./gitlab-ce/data
+        target: /var/opt/gitlab
+  
