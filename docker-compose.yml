@@ -57,3 +57,6 @@ services:
       - type: bind
         source: ./jenkins
         target: /var/log/jenkins
+      - type: bind
+        source: ./jenkins/home
+        target: /var/jenkins_home
