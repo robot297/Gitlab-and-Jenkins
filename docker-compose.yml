@@ -7,56 +7,54 @@ networks:
     # driver: custom-driver-1
 
 services:
-  gitlab-ce:
-    image: gitlab/gitlab-ce
-    container_name: gitlab
-    hostname: gitlab
-    networks:
-      - frontend
-    ports:
-      - "80:80"
-      - "443:443"
-      - "22"
-      - "4567:4567"
-    volumes:
-      - type: bind
-        source: ./gitlab-ce/config
-        target: /etc/gitlab
-      - type: bind
-        source: ./gitlab-ce/logs
-        target: /var/log/gitlab
-      - type: bind
-        source: ./gitlab-ce/data
-        target: /var/opt/gitlab
+  # gitlab-ce:
+  #   image: gitlab/gitlab-ce
+  #   container_name: gitlab
+  #   hostname: gitlab
+  #   networks:
+  #     - frontend
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #     - "22"
+  #     - "4567:4567"
+  #   volumes:
+  #     - type: bind
+  #       source: ./gitlab-ce/config
+  #       target: /etc/gitlab
+  #     - type: bind
+  #       source: ./gitlab-ce/logs
+  #       target: /var/log/gitlab
+  #     - type: bind
+  #       source: ./gitlab-ce/data
+  #       target: /var/opt/gitlab
     # links:
     #   - gitlab-runners:gitlab-runners
 
-  # gitlab-runners:
-  #   image: gitlab/gitlab-runner
-  #   container_name: gitlab-runner
-  #   networks:
-  #     - frontend
-  #   links:
-  #     - "gitlab-ce:gitlab"
-  #   volumes:
-  #     - type: bind
-  #       source: ./gitlab-runners/config
-  #       target: /etc/gitlab-runner
-  #     - type: bind
-  #       source: /var/run/docker.sock
-  #       target: /var/run/docker.sock
-
-  jenkins:
-    image: jenkins/jenkins
-    container_name: jenkins
+  gitlab-runners:
+    image: gitlab/gitlab-runner
+    container_name: gitlab-runner
     networks:
       - frontend
-    ports:
-      - 8080:8080
     volumes:
       - type: bind
-        source: ./jenkins
-        target: /var/log/jenkins
+        source: ./gitlab-runners/config
+        target: /etc/gitlab-runner
       - type: bind
-        source: ./jenkins/home
-        target: /var/jenkins_home
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+
+  # jenkins:
+  #   image: jenkins/jenkins
+  #   container_name: jenkins
+  #   networks:
+  #     - frontend
+  #   ports:
+  #     - 8080:8080
+  #   volumes:
+  #     - type: bind
+  #       source: ./jenkins
+  #       target: /var/log/jenkins
+  #     - type: bind
+  #       source: ./jenkins/home
+  #       target: /var/jenkins_home
